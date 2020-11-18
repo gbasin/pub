@@ -2,15 +2,15 @@ The Audit API allows you to review activity performed by Q. Here are some exampl
 
 ## Review a borrower income calculation on a mortgage
 
-<pre style="background-color: lightgray;"  >
-q.audit.<span style="color:red">review</span>({
+<pre style="background-color: #EEEEEE;"  >
+q.audit.<span style="color:#DD0000">review</span>({
   loan: 'd82h99bb',
-  items: <span style="color:red">'income'</span>
+  items: <span style="color:#DD0000">'income'</span>
 });
 </pre>
 <br>
 Result
-<pre style="background-color: lightgray;"  >
+<pre style="background-color: #EEEEEE;"  >
 annual: 155200
 data sources:
   - name: IRS Transcript 2019
@@ -19,10 +19,10 @@ data sources:
 </pre>
 
 ## Review a mortgage closing disclosure window
-<pre style="background-color: lightgray;"  >
-data = q.audit.<span style="color:red">review</span>({
+<pre style="background-color: #EEEEEE;"  >
+data = q.audit.<span style="color:#DD0000">review</span>({
   loan: 'd82h99bb',
-  items: <span style="color:red">'closing'</span>
+  items: <span style="color:#DD0000">'closing'</span>
 });
 
 notarization_time = data['notarization']['time'];
@@ -32,20 +32,20 @@ calculate_business_days(notarization_time - closing_disclosure_time);
 </pre>
 <br>
 Result
-<pre style="background-color: lightgray;"  >
+<pre style="background-color: #EEEEEE;"  >
 10.23
 </pre>
 
 ## Re-underwrite a mortgage with fresh data
-<pre style="background-color: lightgray;"  >
-q.audit.<span style="color:red">reunderwrite</span>({
+<pre style="background-color: #EEEEEE;"  >
+q.audit.<span style="color:#DD0000">reunderwrite</span>({
   loan: 'd82h99bb',
-  items: <span style="color:red">['income', 'credit']</span>
+  items: <span style="color:#DD0000">['income', 'credit']</span>
 });
 </pre>
 <br>
 Result
-<pre style="background-color: lightgray;"  >
+<pre style="background-color: #EEEEEE;"  >
 Underwriting Rules: aa92sjw2
 Result: Passed
 Income:
