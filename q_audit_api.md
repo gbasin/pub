@@ -1,78 +1,59 @@
-The Audit API provides access to mortgage origination data useful for quality control. You can use the Audit API to verify the source of data used in underwriting, compliance with regulatory requirements, and to completely re-underwrite a mortgage with fresh data from the source. Here are some examples of what you can do with `q.audit`:
+The Audit API allows you to review activity performed by Q. Here are some examples of what you can do with `q.audit` to analyze a mortgage loan after it has closed:
 
-## Verify income used during mortgage underwriting
+## Review a borrower income calculation on a mortgage
 
 ```
-const income_verification = await q.audit.verify({
-  loan_id: 'd82h99bb',
-  verify: 'income'
+q.audit.review({
+  loan: 'd82h99bb',
+  items: 'income'
+});
+```
+<br>
+Result
+```
+annual: 155200
+data sources:
+  - name: IRS Transcript 2019
+    retrieved: 2020-05-17 12:56:21.281
+    wages salaries tips: 155200
+```
+
+## Review a mortgage closing disclosure window
+```
+data = q.audit.review({
+  loan: 'd82h99bb',
+  items: 'closing'
 });
 
-print(income_verification);
+notarization_time = data['notarization']['time'];
+closing_disclosure_time = data['closing_disclosure']['time'];
+
+calculate_business_days(notarization_time - closing_disclosure_time);
 ```
+<br>
+Result
 ```
-Loan ID: d82h99bb
-Income: $155,200
-Sources: 
-  - Name: IRS Transcript 2019
-    Collected: 2020-05-17 12:56:21.281
-    Wages Salaries Tips: 155200
+10.23
 ```
 
-## Verify compliance with TILA closing window regulation
-
+## Re-underwrite a mortgage with fresh data
 ```
-const closing_verification = await q.audit.verify({
-  loan_id: 'd82h99bb',
-  verify: 'closing'
+q.audit.reunderwrite({
+  loan: 'd82h99bb',
+  refresh: ['income', 'credit']
 });
-
-const closing_window = closing_verification['notarization']['time'] - closing_verification['closing_disclosure']['receipt_time'];
-const closing_window_in_days = difference_in_business_days(closing_window);
-
-if ( closing_window_in_days < 7 ) {
-  throw new tila_violation("Time between Closing Disclosure recipt and mortgage notarization is less than the 7 business day requirement!");
-}
 ```
-
-## Re-underwrite a mortgage with re-verified income, employment, and credit
-
+<br>
+Result
 ```
-const reunderwrite_result = await q.audit.reunderwrite({
-  loan_id: 'd82h99bb',
-  reunderwrite: ['income', 'employment', 'credit']
-})
-
-print(reunderwrite_result);
-```
-```
-Loan ID: d82h99bb
-Underwriting Rules ID: aa92sjw2
-Underwriting Results:
-	Original Result: Passed
-    Current Result: Passed
-    Original Time: 2020-05-17 14:01:16.283
-    Current TIme: 2020-06-21 15:21:49.266
+Underwriting Rules: aa92sjw2
+Result: Passed
 Income:
-	Original:
-    	Source: Equifax
-        Employer: XYZ Industries
-        Income: 155200
-        Status: Employed
-        As of: 2020-05-17 14:01:15.121
-    Current:
-    	Source: Equifax
-        Employer: XYZ Industries
-        Income: 155200
-        Status: Employed
-        As of: 2020-06-21 15:21:48.110
+  Source: Equifax
+  Employer: XYZ Industries
+  Income: 155200
+  Status: Employed
 Credit:
-	Original:
-    	Source: CoreLogic Trimerge Report
-        FICO: [748, 744, 752]
-      	As of: 2020-05-17 14:01:14.998
-    Current:
-    	Source: CoreLogic Trimerge Report
-        FICO: [750, 744, 754]
-      	As of: 2020-06-21 15:21:48.200
+  Source: CoreLogic Trimerge Report
+  FICO: [750, 744, 754]
 ```
