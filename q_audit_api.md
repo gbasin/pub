@@ -2,50 +2,50 @@ The Audit API allows you to review activity performed by Q. Here are some exampl
 
 ## Review a borrower income calculation on a mortgage
 
-```
-q.audit.review({
+<pre style="background-color: lightgray;"  >
+q.audit.<span style="color:red">review</span>({
   loan: 'd82h99bb',
-  items: 'income'
+  items: <span style="color:red">'income'</span>
 });
-```
+</pre>
 <br>
 Result
-```
+<pre style="background-color: lightgray;"  >
 annual: 155200
 data sources:
   - name: IRS Transcript 2019
     retrieved: 2020-05-17 12:56:21.281
     wages salaries tips: 155200
-```
+</pre>
 
 ## Review a mortgage closing disclosure window
-```
-data = q.audit.review({
+<pre style="background-color: lightgray;"  >
+data = q.audit.<span style="color:red">review</span>({
   loan: 'd82h99bb',
-  items: 'closing'
+  items: <span style="color:red">'closing'</span>
 });
 
 notarization_time = data['notarization']['time'];
 closing_disclosure_time = data['closing_disclosure']['time'];
 
 calculate_business_days(notarization_time - closing_disclosure_time);
-```
+</pre>
 <br>
 Result
-```
+<pre style="background-color: lightgray;"  >
 10.23
-```
+</pre>
 
 ## Re-underwrite a mortgage with fresh data
-```
-q.audit.reunderwrite({
+<pre style="background-color: lightgray;"  >
+q.audit.<span style="color:red">reunderwrite</span>({
   loan: 'd82h99bb',
-  refresh: ['income', 'credit']
+  items: <span style="color:red">['income', 'credit']</span>
 });
-```
+</pre>
 <br>
 Result
-```
+<pre style="background-color: lightgray;"  >
 Underwriting Rules: aa92sjw2
 Result: Passed
 Income:
@@ -56,4 +56,4 @@ Income:
 Credit:
   Source: CoreLogic Trimerge Report
   FICO: [750, 744, 754]
-```
+</pre>
